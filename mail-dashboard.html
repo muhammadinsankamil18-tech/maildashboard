@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- mail-dashboard build: v1 (2026-10-04) -->
+<!-- mail-dashboard build: v2-responsive (2026-10-04) -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Zenith — Messages</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <style>
@@ -33,7 +33,7 @@
   [hidden]{ display:none !important; }
   mark{ background:#fff1b8; color:inherit; border-radius:3px; padding:0 1px; }
 
-  .app{ display:flex; height:100vh; min-height:640px; }
+  .app{ display:flex; height:100vh; height:100dvh; min-height:640px; }
 
   /* ================= SIDEBAR ================= */
   .sb{ width:284px; flex:none; display:flex; flex-direction:column; border-right:1px solid var(--line); background:#fff; }
@@ -152,8 +152,13 @@
   .mc-avw{ position:relative; width:32px; height:32px; flex:none; }
   .mc-avw > .ava, .mc-avw > .lg{ position:absolute; inset:0; transition:opacity .18s ease, transform .22s var(--ease); }
   .mc-avw > .cb{ position:absolute; left:6px; top:6px; opacity:0; transform:scale(.6); transition:opacity .18s ease, transform .22s var(--ease), background .15s, border-color .15s; }
-  .mc:hover .mc-avw > .cb, .list.selecting .mc-avw > .cb{ opacity:1; transform:none; }
-  .mc:hover .mc-avw > .ava, .mc:hover .mc-avw > .lg, .list.selecting .mc-avw > .ava, .list.selecting .mc-avw > .lg{ opacity:0; transform:scale(.7); }
+  .list.selecting .mc-avw > .cb{ opacity:1; transform:none; }
+  .list.selecting .mc-avw > .ava, .list.selecting .mc-avw > .lg{ opacity:0; transform:scale(.7); }
+  @media (hover:hover){
+    .mc:hover .mc-avw > .cb{ opacity:1; transform:none; }
+    .mc:hover .mc-avw > .ava, .mc:hover .mc-avw > .lg{ opacity:0; transform:scale(.7); }
+  }
+  @media (hover:none){ .mc{ -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; } }
   .ava.sm{ width:32px; height:32px; font-size:11.5px; }
   .lg{ display:flex; align-items:center; justify-content:center; border-radius:9px; }
   .lg svg{ width:60%; height:60%; }
@@ -321,10 +326,69 @@
   .toast button:hover{ background:rgba(255,255,255,.2); }
   .toast .nobtn{ padding-right:6px; }
 
+  .menu-btn{ display:none; }
+  .sb-backdrop{ display:none; }
+  .rd-when{ display:none; margin-top:3px; font-size:13px; color:var(--sub); }
+
   @media (max-width:1180px){
     .sb{ width:236px; }
     .work{ grid-template-columns:330px minmax(0,1fr); }
     .rd-date{ display:none; }
+    .rd-when{ display:block; }
+  }
+
+  /* ---------- tablet: sidebar becomes a slide-in drawer ---------- */
+  @media (max-width:1024px){
+    .menu-btn{ display:flex; margin-left:-6px; }
+    .sb{ position:fixed; z-index:150; top:0; bottom:0; left:0; width:284px; box-shadow:0 20px 60px rgba(16,24,40,.18); transform:translateX(-102%); transition:transform .36s var(--ease); }
+    .app.nav-open .sb{ transform:none; }
+    .sb-backdrop{ display:block; position:fixed; inset:0; z-index:140; background:rgba(17,19,24,.32); opacity:0; pointer-events:none; transition:opacity .25s ease; }
+    .app.nav-open .sb-backdrop{ opacity:1; pointer-events:auto; }
+    .top{ padding:0 16px; gap:12px; }
+    .work{ grid-template-columns:320px minmax(0,1fr); gap:12px; padding:12px; }
+  }
+
+  /* ---------- phone: one pane at a time ---------- */
+  @media (max-width:760px){
+    .app{ min-height:0; }
+    .top{ height:60px; padding:0 10px 0 12px; gap:6px; }
+    .top-ic, .top p{ display:none; }
+    .top h1{ font-size:17px; }
+    .top-right{ gap:2px; }
+    .top .btn-o .lbl, .top .btn-dark .lbl{ display:none; }
+    .top .btn-o{ width:40px; padding:0; justify-content:center; border:0; }
+    .top .btn-dark{ width:40px; height:40px; padding:0; justify-content:center; margin-left:4px; }
+    .top .pop{ position:fixed; top:64px; left:10px; right:10px; min-width:0 !important; transform-origin:top center; }
+
+    .work{ display:block; position:relative; padding:0; overflow:hidden; }
+    .list{ height:100%; border:0; border-radius:0; padding:12px 12px 0; }
+    .ml{ margin:0 -12px; padding:0 12px calc(14px + env(safe-area-inset-bottom)); }
+    .mc{ padding:14px 15px; }
+    .search input{ font-size:16px; }
+
+    .reader{ position:absolute; inset:0; z-index:20; border:0; border-radius:0; background:#fff; transform:translateX(100%); transition:transform .36s var(--ease); }
+    .app.reading .reader{ transform:none; box-shadow:-12px 0 30px rgba(16,24,40,.06); }
+    .rd-tool{ padding:10px 12px; gap:8px; }
+    .rd-tool .btn-s{ margin-right:auto; }
+    .rd-tool .pager{ margin-left:0; }
+    .rd-tool .pg-txt{ display:none; }
+    .rd-head{ flex-wrap:wrap; gap:12px; padding:16px 16px 0; }
+    .rd-acts{ width:100%; padding-left:52px; }
+    .rd-subj{ margin:16px 16px 0; font-size:20px; }
+    .rd-replied{ margin:10px 16px 0; }
+    .rd-body{ padding:18px 16px 20px; }
+    .rd-body p.lead{ font-size:16px; }
+    .reply-box{ margin:0 16px 18px; }
+    .reply-box textarea{ font-size:16px; }
+    .rd-att{ padding:18px 16px calc(22px + env(safe-area-inset-bottom)); }
+    .att{ width:100%; }
+
+    .overlay{ align-items:flex-end; padding:0; }
+    .modal{ width:100%; max-height:92vh; overflow:auto; border-radius:20px 20px 0 0; transform:translateY(100%); }
+    .f-row input, .f-body textarea{ font-size:16px; }
+    .f-body textarea{ min-height:150px; }
+    .m-f{ padding-bottom:calc(18px + env(safe-area-inset-bottom)); }
+    .toast{ max-width:calc(100vw - 24px); bottom:calc(16px + env(safe-area-inset-bottom)); }
   }
   @media print{
     body *{ visibility:hidden; }
@@ -339,6 +403,7 @@
 </head>
 <body>
 <div class="app">
+  <div class="sb-backdrop" id="sbBackdrop"></div>
   <!-- ================= SIDEBAR ================= -->
   <aside class="sb">
     <div class="sb-brand">
@@ -394,6 +459,7 @@
   <!-- ================= MAIN ================= -->
   <main class="main">
     <header class="top">
+      <button class="ic-btn menu-btn" id="menuBtn" aria-label="Open menu"><i data-ic="menu"></i></button>
       <div class="top-ic" id="topIc"><i data-ic="mail"></i></div>
       <div class="top-txt" id="topTxt"><h1 id="topTitle">Messages</h1><p id="topSub">All your campaign updates, messages, and alerts in one place.</p></div>
       <div class="top-right">
@@ -408,7 +474,7 @@
           </div>
         </div>
         <div class="pop-wrap">
-          <button class="btn-o" data-pop="cal"><i data-ic="calendar"></i>Calendar</button>
+          <button class="btn-o" data-pop="cal" aria-label="Calendar"><i data-ic="calendar"></i><span class="lbl">Calendar</span></button>
           <div class="pop" id="pop-cal" style="min-width:290px">
             <div class="pop-t">Today, Dec 04</div>
             <div class="ev-row"><span class="bar" style="background:#2f6bf0"></span><span><div class="t">Campaign budget review</div><div class="m">01:00 PM – 01:30 PM</div></span></div>
@@ -416,7 +482,7 @@
             <div class="ev-row"><span class="bar" style="background:#16a34a"></span><span><div class="t">Client call with Ali</div><div class="m">04:30 PM – 05:00 PM</div></span></div>
           </div>
         </div>
-        <button class="btn-dark" id="composeBtn"><i data-ic="plus"></i>Compose New Email</button>
+        <button class="btn-dark" id="composeBtn" aria-label="Compose new email"><i data-ic="plus"></i><span class="lbl">Compose New Email</span></button>
       </div>
     </header>
 
@@ -533,7 +599,8 @@
     plane:'<path d="M21 4L3 11l6.5 2.5L12 20l3-6.5L21 4z"/><path d="M9.5 13.5L21 4"/>',
     link:'<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>',
     forward:'<path d="M14.5 6.5L20 12l-5.5 5.5"/><path d="M19.5 12H10a6 6 0 00-6 6v.5"/>',
-    send:'<path d="M4 12l16-8-6 16-2.5-6.5L4 12z"/>'
+    send:'<path d="M4 12l16-8-6 16-2.5-6.5L4 12z"/>',
+    menu:'<path d="M4 7h16M4 12h16M4 17h10"/>'
   };
   function ic(n, cls){ return '<svg'+(cls?' class="'+cls+'"':'')+' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(P[n]||'')+'</svg>'; }
   function hydrate(root){ $$('i[data-ic]',root).forEach(function(el){ var tmp=document.createElement('div'); tmp.innerHTML=ic(el.dataset.ic, el.className); el.replaceWith(tmp.firstChild); }); }
@@ -608,6 +675,7 @@
   MSGS.forEach(function(m,i){ m.order=i; });
 
   var BASE_POS=14, BASE_TOTAL=951;
+  var app=document.querySelector('.app'), mq=window.matchMedia('(max-width:760px)'), canHover=window.matchMedia('(hover:hover)');
   var state={ current:'m1', search:'', sort:'newest', selected:{}, added:0, removed:0, synced:false };
   function get(id){ for(var i=0;i<MSGS.length;i++) if(MSGS[i].id===id) return MSGS[i]; return null; }
 
@@ -714,7 +782,7 @@
   function readerHTML(m){
     var A=m.att?ATT[m.att.type]:null;
     return '<div class="rd-head">'+avatar(m)+
-      '<div class="rd-from"><div class="rd-name">'+esc(m.from)+' <span class="rd-mail">&lt;'+esc(m.email)+'&gt;</span></div><div class="rd-to">To: '+esc(m.to)+'</div></div>'+
+      '<div class="rd-from"><div class="rd-name">'+esc(m.from)+' <span class="rd-mail">&lt;'+esc(m.email)+'&gt;</span></div><div class="rd-to">To: '+esc(m.to)+'</div><div class="rd-when">Dec 04, 2024 - '+fmtTime(m.min)+'</div></div>'+
       '<div class="rd-acts"><span class="rd-date">Dec 04, 2024 - '+fmtTime(m.min)+'</span>'+
         '<button class="sq round'+(m.starred?' starred':'')+'" id="rStar" title="Star (S)">'+ic('star')+'</button>'+
         '<button class="sq round" id="rReply" title="Reply (R)">'+ic('reply')+'</button>'+
@@ -752,6 +820,7 @@
     var m=get(id); if(!m) return;
     var changed = state.current!==id;
     state.current=id;
+    if(mq.matches) app.classList.add('reading');
     if(m.unread){ m.unread=false; }
     MSGS.forEach(function(x){ if(x.el) paintCard(x); });
     updatePagers();
@@ -763,9 +832,9 @@
     swapT=setTimeout(function(){ fillReader(); void rdContent.offsetWidth; rdContent.classList.remove('out'); if(opt.after) setTimeout(opt.after, 120); }, 150);
   }
   function closeReader(){
-    state.current=null;
-    MSGS.forEach(function(x){ if(x.el) paintCard(x); });
-    rdEmpty.classList.add('show'); updatePagers();
+    var finish=function(){ state.current=null; MSGS.forEach(function(x){ if(x.el) paintCard(x); }); rdEmpty.classList.add('show'); updatePagers(); };
+    if(mq.matches && app.classList.contains('reading')){ app.classList.remove('reading'); setTimeout(finish, reduce?0:360); }
+    else finish();
   }
 
   function wireReader(m){
@@ -819,10 +888,22 @@
   }
 
   /* ================= LIST INTERACTIONS ================= */
+  var lpT=null, lpFired=false, lpX=0, lpY=0;
+  ml.addEventListener('pointerdown', function(e){
+    var card=e.target.closest('.mc'); if(!card || e.pointerType==='mouse') return;
+    lpFired=false; lpX=e.clientX; lpY=e.clientY;
+    clearTimeout(lpT); lpT=setTimeout(function(){ lpFired=true; toggleSel(card.dataset.id); if(navigator.vibrate) navigator.vibrate(10); }, 450);
+  });
+  ml.addEventListener('pointermove', function(e){ if(lpT && (Math.abs(e.clientX-lpX)>8 || Math.abs(e.clientY-lpY)>8)){ clearTimeout(lpT); lpT=null; } });
+  ['pointerup','pointercancel','pointerleave'].forEach(function(t){ ml.addEventListener(t, function(){ clearTimeout(lpT); lpT=null; }); });
+  ml.addEventListener('contextmenu', function(e){ if(e.target.closest('.mc') && !canHover.matches) e.preventDefault(); });
+
   ml.addEventListener('click', function(e){
     var card=e.target.closest('.mc'); if(!card) return;
     var id=card.dataset.id;
+    if(lpFired){ lpFired=false; return; }
     if(e.target.closest('.cb')){ toggleSel(id); return; }
+    if(!canHover.matches && listEl.classList.contains('selecting')){ toggleSel(id); return; }
     if(e.target.closest('.mc-att')){
       openMessage(id, { after:function(){ var a=$('#attCard'); if(a){ a.scrollIntoView({ block:'center', behavior:reduce?'auto':'smooth' }); a.classList.remove('flash'); void a.offsetWidth; a.classList.add('flash'); } } });
       return;
@@ -971,6 +1052,9 @@
     }, reduce?0:200);
   }); });
   $('#phBack').addEventListener('click', function(){ $('.sb-item[data-page="Messages"]').click(); });
+  $('#menuBtn').addEventListener('click', function(e){ e.stopPropagation(); app.classList.add('nav-open'); });
+  $('#sbBackdrop').addEventListener('click', function(){ app.classList.remove('nav-open'); });
+  $$('.sb-item').forEach(function(it){ it.addEventListener('click', function(){ app.classList.remove('nav-open'); }); });
   $$('.sb-app').forEach(function(a){ a.addEventListener('click', function(){ toast('Opening '+a.dataset.app); }); });
 
   /* ================= COMPOSE ================= */
@@ -1024,6 +1108,7 @@
   document.addEventListener('keydown', function(e){
     if(e.key==='Escape'){
       if(overlay.classList.contains('open')){ closeModal(); return; }
+      if(app.classList.contains('nav-open')){ app.classList.remove('nav-open'); return; }
       var r=$('#rdReply'); if(r && r.classList.contains('open') && document.activeElement && document.activeElement.id==='replyText'){ toggleReply(false); document.activeElement.blur(); return; }
       closePops(); return;
     }
